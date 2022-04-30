@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    style="@style/Theme.MaterialComponents.Light.NoActionBar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkGrey">
+
+    <ViewSwitcher
+        android:id="@+id/backGroundSwitcher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/background2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            app:srcCompat="@color/gray" />
+    </ViewSwitcher>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="@style/Widget.Material3.CollapsingToolbar.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="24dp"
+        android:background="#00000000"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:subtitle="Artist - Album"
+        app:subtitleTextColor="@color/material_on_primary_emphasis_medium"
+        app:title="Title"
+        app:titleTextColor="@color/white" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/control"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0" >
+
+        <ImageButton
+            android:id="@+id/buttonShuffleMode"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/buttonSkipNext"
+            app:layout_constraintTop_toBottomOf="@+id/seekbar"
+            app:srcCompat="@drawable/exo_icon_shuffle_off"
+            app:tint="#A6FFFFFF"
+            android:tintMode="src_in" />
+
+        <ImageButton
+            android:id="@+id/buttonRepeatMode"
+            android:layout_width="28dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:background="#00000000"
+            android:scaleType="fitCenter"
+            android:tintMode="src_in"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonSkipPrevious"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekbar"
+            app:srcCompat="@drawable/exo_icon_repeat_all"
+            app:tint="#A6FFFFFF" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:text="00:00"
+            android:textColor="@color/material_on_primary_emphasis_medium"
+            app:layout_constraintBottom_toBottomOf="@+id/seekbar"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:progressBackgroundTint="#FFFFFFFF"
+            android:progressTint="#B3FFFFFF"
+            android:thumbTint="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/duration"
+            app:layout_constraintStart_toEndOf="@+id/position"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:outlineProvider="none"
+            app:backgroundTint="#44FFFFFF"
+            app:fabSize="auto"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekbar"
+            app:srcCompat="@drawable/ic_play"
+            app:tint="@color/white" />
+
+        <com.google.android.exoplayer2.ui.DefaultTimeBar
+            android:id="@+id/timeBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/duration"
+            app:layout_constraintStart_toStartOf="@+id/position"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonSkipNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:outlineProvider="none"
+            app:backgroundTint="#44FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonPlay"
+            app:layout_constraintStart_toEndOf="@+id/buttonPlay"
+            app:srcCompat="@drawable/ic_next"
+            app:tint="@color/white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonSkipPrevious"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:outlineProvider="none"
+            app:backgroundTint="#44FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonPlay"
+            app:layout_constraintEnd_toStartOf="@+id/buttonPlay"
+            app:srcCompat="@drawable/ic_previous"
+            app:tint="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:text="00:00"
+            android:textColor="@color/material_on_primary_emphasis_medium"
+            app:layout_constraintBottom_toBottomOf="@+id/seekbar"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ViewSwitcher
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/control"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:id="@+id/albumSwitcher"
+        android:outlineProvider="bounds"
+        android:elevation="8dp" >
+
+        <com.github.ygyin.kotlinaudioplayer.ui.nowplaying.SquareAlbumView
+            android:id="@+id/albumArt"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:padding="0dp"
+            android:outlineProvider="none"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            app:srcCompat="@color/lighterGray"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/control" />
+
+        <com.github.ygyin.kotlinaudioplayer.ui.nowplaying.SquareAlbumView
+            android:id="@+id/albumArt2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:srcCompat="@color/lighterGray"
+            android:padding="0dp"
+            android:outlineProvider="none"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/control"
+            android:visibility="visible"/>
+
+    </ViewSwitcher>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

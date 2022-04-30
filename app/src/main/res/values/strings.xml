@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">KotlinAudioPlayer</string>
+
+    <string name="cover">cover</string>
+</resources>
