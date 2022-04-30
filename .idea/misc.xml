@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_cover_bg.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_default_cover.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_sharp_star.xml" value="0.108" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_now_playing.xml" value="0.1" />

@@ -33,6 +33,8 @@ class PlaylistFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_playlist, container, false)
 
+    // Initialize the playlistAdapter and its RecyclerView
+    // Use livedata to observe whether there are new audio file.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val musicAdapter = PlaylistAdapter{
