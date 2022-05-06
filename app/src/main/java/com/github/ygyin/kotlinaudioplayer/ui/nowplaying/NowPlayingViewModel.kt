@@ -52,7 +52,7 @@ class NowPlayingViewModel (private val context: Context,
     }
     private val handler = Handler(Looper.getMainLooper())
 
-    val playButton = MutableLiveData<IntArray>()
+    val playPauseButton = MutableLiveData<IntArray>()
     val shuffleMode = MutableLiveData<Int>()
     val repeatMode = MutableLiveData<Int>()
 
@@ -101,7 +101,7 @@ class NowPlayingViewModel (private val context: Context,
             this.audioMetadata.postValue(playingMetadata)
         }
 
-        playButton.postValue(
+        playPauseButton.postValue(
             when(playbackState.isPlaying){
                 true -> intArrayOf(-R.attr.state_play, R.attr.state_pause) //Set pause
                 else -> intArrayOf(R.attr.state_play, -R.attr.state_pause) //Set play

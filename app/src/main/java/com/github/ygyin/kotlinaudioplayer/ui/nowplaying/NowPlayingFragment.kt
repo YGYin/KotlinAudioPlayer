@@ -17,6 +17,8 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.ygyin.kotlinaudioplayer.R
+import com.github.ygyin.kotlinaudioplayer.ui.nowplaying.NowPlayingViewModel.NowPlayingMetadata.Companion.timing
+import com.github.ygyin.kotlinaudioplayer.ui.playlist.PlaylistViewModel
 import com.github.ygyin.kotlinaudioplayer.utils.Injector
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.now_playing_content.*
@@ -32,9 +34,9 @@ class NowPlayingFragment : Fragment() {
         Injector.provideNowPlayingViewModel(requireContext())
     }
 
-//    private val playlistViewModel: PlaylistViewModel by viewModels {
-//        Injector.providePlaylistViewModel(requireContext())
-//    }
+    private val playlistViewModel: PlaylistViewModel by viewModels {
+        Injector.providePlaylistViewModel(requireContext())
+    }
 
     companion object {
         fun newInstance() = NowPlayingFragment()
@@ -59,12 +61,27 @@ class NowPlayingFragment : Fragment() {
             Observer{ mediaItem -> uiUpdate(view, mediaItem) })
 
         nowPlayingViewModel.playbackProcess.observe(viewLifecycleOwner,
-            Observer { progress: Int ->
-                updateProgressBar(progress)
+            Observer { progress: Int -> updateProgressBar(progress) })
+
+        nowPlayingViewModel.playPauseButton.observe(viewLifecycleOwner,
+            Observer {
+                playPauseImage.setImageState(it, true)
+                mainPlayPauseButton.setImageState(it, true)
             })
 
-//        nowPlayingViewModel.audioPosition.observe(viewLifecycleOwner,
-//            Observer { position -> nowDuration.text = timing(requireContext(), position) })
+        nowPlayingViewModel.audioPosition.observe(viewLifecycleOwner,
+            Observer { position -> nowDuration.text = timing(requireContext(), position) })
+
+        playPauseImage.setOnClickListener {
+            nowPlayingViewModel.audioMetadata.value?.let {
+                playlistViewModel.playAudioById(it.id)
+            }
+        }
+        mainPlayPauseButton.setOnClickListener {
+            nowPlayingViewModel.audioMetadata.value?.let {
+                playlistViewModel.playAudioById(it.id)
+            }
+        }
     }
 
     private fun uiUpdate(view: View, metadata: NowPlayingViewModel.NowPlayingMetadata) {

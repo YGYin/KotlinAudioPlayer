@@ -66,7 +66,25 @@ class PlaylistViewModel(
             }
         } else
             transportControls.playFromMediaId(playItem.id.toString(), null)
+    }
 
+    fun playAudioById(id: String) {
+        val nowPlaying = playbackServiceConnection.nowPlaying.value
+        val transportControls = playbackServiceConnection.transportControls
+        val isPrepared = playbackServiceConnection.playbackState.value?.isPrepared ?: false
+
+        if (isPrepared && id == nowPlaying?.id) {
+            playbackServiceConnection.playbackState.value?.let { playbackState ->
+                when {
+                    playbackState.isPlaying -> transportControls.pause()
+                    playbackState.isPlayEnabled -> transportControls.play()
+                    else -> {
+                        Log.w(PLVM_TAG, "Play and Pause Fault in playAudioById: $id .")
+                    }
+                }
+            }
+        } else
+            transportControls.playFromMediaId(id, null)
     }
 
     override fun onCleared() {
