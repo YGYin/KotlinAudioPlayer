@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ImageView
+        android:id="@+id/mainCover"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="70dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        tools:src="@tools:sample/avatars" />
+
+    <View
+        android:id="@+id/titleBg"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/design_default_color_primary"
+        app:layout_constraintBottom_toBottomOf="@id/mainSubTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mainTitle" />
+
+    <TextView
+        android:id="@+id/mainTitle"
+        style="@style/Playlist.MainText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainCover"
+        tools:text="@tools:sample/lorem" />
+
+    <TextView
+        android:id="@+id/mainSubTitle"
+        style="@style/Playlist.SecondaryText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainTitle"
+        tools:text="@tools:sample/lorem" />
+
+    <SeekBar
+        android:id="@+id/largeSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="@id/totalDuration"
+        app:layout_constraintStart_toStartOf="@id/nowDuration"
+        app:layout_constraintTop_toBottomOf="@id/mainSubTitle" />
+
+    <TextView
+        android:id="@+id/nowDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainSubTitle"
+        tools:text="00:00" />
+
+    <TextView
+        android:id="@+id/totalDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainSubTitle"
+        tools:text="05:00" />
+
+    <ImageButton
+        android:id="@+id/shuffleButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_shuffle"
+        app:layout_constraintEnd_toStartOf="@id/largePreviousButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nowDuration"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/largePreviousButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_previous"
+        app:layout_constraintEnd_toStartOf="@id/largePlayPauseButton"
+        app:layout_constraintStart_toEndOf="@id/shuffleButton"
+        app:layout_constraintTop_toBottomOf="@id/nowDuration"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/largePlayPauseButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/animation_playpause"
+        app:layout_constraintEnd_toStartOf="@id/largeNextButton"
+        app:layout_constraintStart_toEndOf="@id/largePreviousButton"
+        app:layout_constraintTop_toBottomOf="@id/nowDuration"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/largeNextButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="0dp"
+        android:src="@drawable/ic_next"
+        app:layout_constraintEnd_toStartOf="@id/repeatButton"
+        app:layout_constraintStart_toEndOf="@id/largePlayPauseButton"
+        app:layout_constraintTop_toBottomOf="@id/nowDuration"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/repeatButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_repeat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/largeNextButton"
+        app:layout_constraintTop_toBottomOf="@id/nowDuration"
+        tools:ignore="ContentDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

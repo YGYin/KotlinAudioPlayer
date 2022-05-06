@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.ygyin.kotlinaudioplayer.R
 import com.github.ygyin.kotlinaudioplayer.data.Music
+import com.github.ygyin.kotlinaudioplayer.ui.nowplaying.NowPlayingFragment
 import com.github.ygyin.kotlinaudioplayer.utils.Injector
 import kotlinx.android.synthetic.main.fragment_playlist.*
 
@@ -23,9 +24,13 @@ private const val READ_EXTERNAL_STORAGE_REQUEST = 1
 
 class PlaylistFragment : Fragment() {
 
-    companion object{
+    companion object {
         fun newInstance() = PlaylistFragment()
     }
+
+//    private val playlistViewModel: PlaylistViewModel by viewModels() {
+//        Injector.providePlaylistViewModel(requireContext())
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,16 +42,16 @@ class PlaylistFragment : Fragment() {
     // Use livedata to observe whether there are new audio file.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val musicAdapter = PlaylistAdapter{
+        val musicAdapter = PlaylistAdapter {
             clickMusic(it)
         }
 
-        with(musicRecyclerView){
-            layoutManager=LinearLayoutManager(activity)
-            adapter= musicAdapter
+        with(musicRecyclerView) {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = musicAdapter
         }
-        playlistViewModel.audio.observe(this.viewLifecycleOwner, Observer<List<Music>>{
-                audio -> musicAdapter.submitList(audio)
+        playlistViewModel.audio.observe(this.viewLifecycleOwner, Observer<List<Music>> { audio ->
+            musicAdapter.submitList(audio)
         })
 
         if (haveStoragePermission())
@@ -61,8 +66,8 @@ class PlaylistFragment : Fragment() {
 
     // 3 Steps for asking permissions
     // 1. Ask for the permission of READ_EXTERNAL_STORAGE
-    private fun requestPermission(){
-        if(!haveStoragePermission()){
+    private fun requestPermission() {
+        if (!haveStoragePermission()) {
             val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
             requestPermissions(
                 permissions,
@@ -72,11 +77,11 @@ class PlaylistFragment : Fragment() {
     }
 
     // 2. To check whether get the permission or not
-    private fun haveStoragePermission()=
+    private fun haveStoragePermission() =
         ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.READ_EXTERNAL_STORAGE
-        )== PackageManager.PERMISSION_GRANTED
+        ) == PackageManager.PERMISSION_GRANTED
 
     /*
         3. When user accepts the permission (after clicking ACCEPT button),
@@ -88,10 +93,10 @@ class PlaylistFragment : Fragment() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        when (requestCode){
+        when (requestCode) {
             // when requestCode == 1
-            READ_EXTERNAL_STORAGE_REQUEST ->{
-                if (grantResults.isNotEmpty()&&grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            READ_EXTERNAL_STORAGE_REQUEST -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // TODO: Show the song list
                     loadList()
                 }
@@ -100,12 +105,17 @@ class PlaylistFragment : Fragment() {
     }
 
     // Display the music
-    private fun loadList(){
+    private fun loadList() {
         playlistViewModel.loadAudio()
     }
 
     private fun clickMusic(music: Music) {
-        // TODO： Play music
+        playlistViewModel.playAudio(music)
+
+        with(parentFragmentManager.beginTransaction()) {
+            add(R.id.nav_host_fragment_content_main, NowPlayingFragment.newInstance())
+            commit()
+        }
     }
 
 }

@@ -10,4 +10,7 @@
     <color name="gray">#616161</color>
     <color name="darkGrey">#323232</color>
     <color name="lighterGray">#9E9E9E</color>
+
+    <!-- Fully transparent, equivalent to 0x00000000 -->
+    <color name="transparent">#00000000</color>
 </resources>

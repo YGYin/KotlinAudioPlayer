@@ -2,4 +2,7 @@
     <string name="app_name">KotlinAudioPlayer</string>
 
     <string name="cover">cover</string>
+    <!--    Time SeekBar Format-->
+    <string name="time_unknown">--:--</string>
+    <string name="time_format">%d:%02d</string>
 </resources>

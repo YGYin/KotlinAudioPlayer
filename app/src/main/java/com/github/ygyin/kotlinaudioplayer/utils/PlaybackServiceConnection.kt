@@ -77,13 +77,12 @@ class PlaybackServiceConnection(context: Context, serviceComponent: ComponentNam
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-            // TODO: To judge whether the metadata is null
             nowPlaying.postValue(metadata ?: NOTHING_PLAYING)
         }
 
-        override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
+//        override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
 //            super.onQueueChanged(queue)
-        }
+//        }
 
         override fun onRepeatModeChanged(mode: Int) {
             repeatMode.postValue(mode)

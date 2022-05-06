@@ -15,7 +15,7 @@ fun ContentResolver.registerObserver(
             observer(changes)
         }
     }
-    // TODO:
+
     registerContentObserver(uri, true, contentObserver)
     return contentObserver
 }

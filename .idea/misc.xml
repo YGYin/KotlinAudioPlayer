@@ -3,14 +3,27 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../private/var/folders/b9/3rr17y8j561fkyb_jkg8h_4h0000gn/T/drawable-temp/fake_of_animation_playpause.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/animation_playpause.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/avd_pause_to_play.xml" value="0.1105" />
+        <entry key="app/src/main/res/drawable/avd_play_to_pause.xml" value="0.1105" />
         <entry key="app/src/main/res/drawable/ic_cover_bg.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_default_cover.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_default_cover_bg.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_next.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_previous.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_repeat.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_sharp_star.xml" value="0.108" />
+        <entry key="app/src/main/res/drawable/vd_pause.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/vd_play.xml" value="0.124" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_now_playing.xml" value="0.1" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_music_layout.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/now_plaing_main_content.xml" value="0.28020833333333334" />
+        <entry key="app/src/main/res/layout/now_playing_content.xml" value="0.2691358024691358" />
+        <entry key="app/src/main/res/layout/now_playing_fragment.xml" value="0.15774383544921872" />
       </map>
     </option>
   </component>
