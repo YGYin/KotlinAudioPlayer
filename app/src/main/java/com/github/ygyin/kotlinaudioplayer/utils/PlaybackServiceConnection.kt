@@ -42,8 +42,8 @@ class PlaybackServiceConnection(context: Context, serviceComponent: ComponentNam
         serviceComponent,
         mediaBrowserConnectionCallback,
         null
-    ).also {
-        it.connect()
+    ).apply {
+        connect()
     }
 
     private inner class MediaBrowserConnectionCallback(private val context: Context) :
@@ -85,10 +85,12 @@ class PlaybackServiceConnection(context: Context, serviceComponent: ComponentNam
 //        }
 
         override fun onRepeatModeChanged(mode: Int) {
+            super.onShuffleModeChanged(mode)
             repeatMode.postValue(mode)
         }
 
         override fun onShuffleModeChanged(mode: Int) {
+            super.onRepeatModeChanged(mode)
             shuffleMode.postValue(mode)
         }
 

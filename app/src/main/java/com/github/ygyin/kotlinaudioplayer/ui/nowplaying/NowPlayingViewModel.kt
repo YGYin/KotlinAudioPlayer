@@ -6,11 +6,9 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.github.ygyin.kotlinaudioplayer.R
+import com.github.ygyin.kotlinaudioplayer.data.Music
 import com.github.ygyin.kotlinaudioplayer.extension.*
 import com.github.ygyin.kotlinaudioplayer.utils.EMPTY_PLAYBACK_STATE
 import com.github.ygyin.kotlinaudioplayer.utils.NOTHING_PLAYING
@@ -84,6 +82,14 @@ class NowPlayingViewModel (private val context: Context,
 //        it.shuffleModeState.observeForever(shuffleModeObserver)
 //        it.repeatModeState.observeForever(repeatModeObserver)
         playbackPositionCheck()
+    }
+
+    fun skipPrevious(){
+        playbackServiceConnection.transportControls.skipToPrevious()
+    }
+
+    fun skipNext(){
+        playbackServiceConnection.transportControls.skipToNext()
     }
 
     private fun playbackStateUpdate(

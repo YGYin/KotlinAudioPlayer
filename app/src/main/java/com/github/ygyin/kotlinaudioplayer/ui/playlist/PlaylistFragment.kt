@@ -28,9 +28,9 @@ class PlaylistFragment : Fragment() {
         fun newInstance() = PlaylistFragment()
     }
 
-//    private val playlistViewModel: PlaylistViewModel by viewModels() {
-//        Injector.providePlaylistViewModel(requireContext())
-//    }
+    private val playlistViewModel: PlaylistViewModel by viewModels() {
+        Injector.providePlaylistViewModel(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,10 +58,6 @@ class PlaylistFragment : Fragment() {
             loadList()
         else
             requestPermission()
-    }
-
-    private val playlistViewModel: PlaylistViewModel by viewModels() {
-        Injector.providePlaylistViewModel(requireContext())
     }
 
     // 3 Steps for asking permissions
@@ -96,10 +92,8 @@ class PlaylistFragment : Fragment() {
         when (requestCode) {
             // when requestCode == 1
             READ_EXTERNAL_STORAGE_REQUEST -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Show the song list
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     loadList()
-                }
             }
         }
     }

@@ -21,18 +21,16 @@ class PlaylistViewModel(
 ) : ViewModel() {
 
     private var contentObserver: ContentObserver? = null
-    private val audioLiveData = MutableLiveData<List<Music>>()
-    val audio: LiveData<List<Music>>
-        get() = audioLiveData
+    private val _audio = MutableLiveData<List<Music>>()
+    val audio: LiveData<List<Music>> get() = _audio
 
     // Got a playlist in a coroutine
-    private suspend fun queryAudio(): List<Music> =
-        playlistRepository.getMusic()
+
 
     fun loadAudio() {
         viewModelScope.launch {
             val playlist = queryAudio()
-            audioLiveData.postValue(playlist)
+            _audio.postValue(playlist)
             contentObserver?.let {
                 contentObserver = contentResolver.registerObserver(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -43,7 +41,6 @@ class PlaylistViewModel(
         }
     }
 
-
     fun playAudio(playItem: Music, pausePermission: Boolean = true) {
         val nowPlaying = playbackServiceConnection.nowPlaying.value
         val transportControls = playbackServiceConnection.transportControls
@@ -53,7 +50,9 @@ class PlaylistViewModel(
             playbackServiceConnection.playbackState.value?.let { playbackState ->
                 when {
                     playbackState.isPlaying ->
-                        if (pausePermission) transportControls.pause() else Unit
+                        if (pausePermission) // Same audio
+                            transportControls.pause()
+                        else Unit
                     playbackState.isPlayEnabled -> transportControls.play()
                     else -> {
                         Log.w(
@@ -86,6 +85,9 @@ class PlaylistViewModel(
         } else
             transportControls.playFromMediaId(id, null)
     }
+
+    private suspend fun queryAudio(): List<Music> =
+        playlistRepository.getMusic()
 
     override fun onCleared() {
         contentObserver?.let {

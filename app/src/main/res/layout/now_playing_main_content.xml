@@ -19,7 +19,7 @@
         android:id="@+id/titleBg"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/design_default_color_primary"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/mainSubTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

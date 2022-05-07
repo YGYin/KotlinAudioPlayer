@@ -1,6 +1,8 @@
 package com.github.ygyin.kotlinaudioplayer.ui.nowplaying
 
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +16,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.ygyin.kotlinaudioplayer.R
 import com.github.ygyin.kotlinaudioplayer.ui.nowplaying.NowPlayingViewModel.NowPlayingMetadata.Companion.timing
 import com.github.ygyin.kotlinaudioplayer.ui.playlist.PlaylistViewModel
@@ -28,6 +33,8 @@ import kotlinx.android.synthetic.main.now_playing_main_content.*
 private const val NowPlaying_TAG = "NowPlayingFragment"
 
 class NowPlayingFragment : Fragment() {
+
+
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     private val nowPlayingViewModel: NowPlayingViewModel by viewModels {
@@ -58,7 +65,7 @@ class NowPlayingFragment : Fragment() {
 
         // To observe the livedata comes from NowPlayingViewModel
         nowPlayingViewModel.audioMetadata.observe(viewLifecycleOwner,
-            Observer{ mediaItem -> uiUpdate(view, mediaItem) })
+            Observer { mediaItem -> uiUpdate(view, mediaItem) })
 
         nowPlayingViewModel.playbackProcess.observe(viewLifecycleOwner,
             Observer { progress: Int -> updateProgressBar(progress) })
@@ -77,10 +84,19 @@ class NowPlayingFragment : Fragment() {
                 playlistViewModel.playAudioById(it.id)
             }
         }
+
         mainPlayPauseButton.setOnClickListener {
             nowPlayingViewModel.audioMetadata.value?.let {
                 playlistViewModel.playAudioById(it.id)
             }
+        }
+
+        mainPreviousButton.setOnClickListener {
+            nowPlayingViewModel.skipPrevious()
+        }
+
+        mainNextButton.setOnClickListener {
+            nowPlayingViewModel.skipNext()
         }
     }
 
@@ -95,20 +111,76 @@ class NowPlayingFragment : Fragment() {
             titleBg.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
-                    com.google.android.material.R.color.design_default_color_primary
+                    android.R.color.white
                 )
             )
             // Update title text color
             mainTitle.setTextColor(Color.WHITE)
             mainSubTitle.setTextColor(Color.WHITE)
         } else {
+            // bottom cover
             Glide.with(view)
                 .load(metadata.coverUri)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(bottomCover)
-            bottomTitle.text = metadata.title
-            bottomSubTitle.text = metadata.subtitle
+            // Main cover
+            Glide.with(view)
+                .load(metadata.coverUri)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(mainCover)
+
+            Glide.with(view)
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .load(metadata.coverUri)
+                .into(object : CustomTarget<Bitmap>(){
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        Palette.from(resource).generate { palette ->
+                            if (palette == null) return@generate
+
+                            mainTitle.setTextColor(
+                                ContextCompat.getColor(requireContext(), android.R.color.black)
+                            )
+                            mainSubTitle.setTextColor(
+                                ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
+                            )
+//                            setMainTitleColor(palette)
+                        }
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
         }
+
+        bottomTitle.text = metadata.title
+        bottomSubTitle.text = metadata.subtitle
+
+        mainTitle.text = metadata.title
+        mainSubTitle.text = metadata.subtitle
+
+        totalDuration.text= metadata.playTime
+    }
+
+    private fun setMainTitleColor(palette: Palette) {
+        val bodyColor: Int = palette.getDominantColor(
+            ContextCompat.getColor(requireContext(), android.R.color.black)
+        )
+
+        val titleTextColor =
+            palette.getLightVibrantColor(
+                ContextCompat.getColor(requireContext(), android.R.color.white)
+            )
+
+        val bodyTextColor =
+            palette.getLightMutedColor(
+                ContextCompat.getColor(requireContext(), android.R.color.white)
+            )
+
+        titleBg.setBackgroundColor(bodyColor)
+
     }
 
     private fun setBottomSheetBehavior() {
@@ -117,8 +189,10 @@ class NowPlayingFragment : Fragment() {
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
+
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 Log.d(NowPlaying_TAG, "Slide Offset: $slideOffset")
+                NowPlayingContent.alpha= 1- slideOffset
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
