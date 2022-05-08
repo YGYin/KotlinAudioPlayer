@@ -35,7 +35,7 @@ class PlaybackServiceConnection(context: Context, serviceComponent: ComponentNam
 
     lateinit var mediaController: MediaControllerCompat
     private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
-    // UI 通过使用 mediaBrowser 作为 controller 来连接 MediaBrowserService,
+    // UI uses mediaBrowser as controller to connect MediaBrowserService,
     // 通过 compat 做向前支援
     val mediaBrowser = MediaBrowserCompat(
         context,

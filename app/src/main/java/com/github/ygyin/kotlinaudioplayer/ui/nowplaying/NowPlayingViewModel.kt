@@ -48,15 +48,24 @@ class NowPlayingViewModel (private val context: Context,
     val playbackProcess = MutableLiveData<Int>().apply {
         postValue(0)
     }
-    private val handler = Handler(Looper.getMainLooper())
+
 
     val playPauseButton = MutableLiveData<IntArray>()
     val shuffleMode = MutableLiveData<Int>()
     val repeatMode = MutableLiveData<Int>()
+    private val shuffleModes = listOf(
+        PlaybackStateCompat.SHUFFLE_MODE_NONE,
+        PlaybackStateCompat.SHUFFLE_MODE_ALL
+    )
+    private val repeatModes = listOf(
+        PlaybackStateCompat.REPEAT_MODE_NONE,
+        PlaybackStateCompat.REPEAT_MODE_ONE,
+        PlaybackStateCompat.REPEAT_MODE_ALL
+    )
 
     private var audioDuration = 0L
     private var positionUpdate = true
-
+    private val handler = Handler(Looper.getMainLooper())
 
 
     /*
@@ -76,11 +85,19 @@ class NowPlayingViewModel (private val context: Context,
         audioDuration = it.duration
     }
 
+    private val shuffleObserver = Observer<Int> {
+        shuffleMode.postValue(it)
+    }
+
+    private val repeatObserver = Observer<Int> {
+        repeatMode.postValue(it)
+    }
+
     private val playbackServiceConnection = playbackServiceConnection.also{
         it.playbackState.observeForever(playbackStateObserver)
         it.nowPlaying.observeForever(audioMetadataObserver)
-//        it.shuffleModeState.observeForever(shuffleModeObserver)
-//        it.repeatModeState.observeForever(repeatModeObserver)
+        it.shuffleMode.observeForever(shuffleObserver)
+        it.repeatMode.observeForever(repeatObserver)
         playbackPositionCheck()
     }
 
@@ -91,6 +108,47 @@ class NowPlayingViewModel (private val context: Context,
     fun skipNext(){
         playbackServiceConnection.transportControls.skipToNext()
     }
+
+    fun selectShuffleMode(){
+        val currentMode = shuffleModes
+            .indexOf(playbackServiceConnection.mediaController.shuffleMode)
+        val aimMode = when(currentMode){
+            PlaybackStateCompat.SHUFFLE_MODE_NONE -> PlaybackStateCompat.SHUFFLE_MODE_ALL
+            PlaybackStateCompat.SHUFFLE_MODE_ALL -> PlaybackStateCompat.SHUFFLE_MODE_NONE
+            else -> PlaybackStateCompat.SHUFFLE_MODE_ALL
+        }
+        playbackServiceConnection.transportControls.setShuffleMode(aimMode)
+    }
+
+    fun selectRepeatMode(){
+        val currentMode = repeatModes
+            .indexOf(playbackServiceConnection.mediaController.repeatMode)
+        val aimMode = when(currentMode){
+            PlaybackStateCompat.REPEAT_MODE_NONE -> PlaybackStateCompat.REPEAT_MODE_ONE
+            PlaybackStateCompat.REPEAT_MODE_ONE -> PlaybackStateCompat.REPEAT_MODE_ALL
+            PlaybackStateCompat.REPEAT_MODE_ALL -> PlaybackStateCompat.REPEAT_MODE_NONE
+            else -> PlaybackStateCompat.REPEAT_MODE_ALL
+        }
+        playbackServiceConnection.transportControls.setRepeatMode(aimMode)
+    }
+
+    /*
+        Use handler to catch the playing process every 0.1s
+        audioProcess: The percentage of playing process, return 0 ~ 100 for seek bar
+        audio position: The actual time of playing audio
+        !! The handler should be initialized before checking playback position.
+     */
+    private fun playbackPositionCheck():Boolean = handler.postDelayed({
+        val currPos = playbackState.currentPlayBackPosition
+        if (audioPosition.value !=  currPos) {
+            audioPosition.postValue(currPos)
+            if (audioDuration > 0)
+                playbackProcess.postValue(((currPos * 100 / audioDuration)).toInt())
+        }
+
+        if (positionUpdate)
+            playbackPositionCheck()
+    }, 100L)
 
     private fun playbackStateUpdate(
         playbackState: PlaybackStateCompat,
@@ -114,24 +172,6 @@ class NowPlayingViewModel (private val context: Context,
             }
         )
     }
-
-    /*
-        Use handler to catch the playing process every 0.1s
-        audioProcess: The percentage of playing process, return 0 ~ 100 for seek bar
-        audio position: The actual time of playing audio
-        !! The handler should be initialized before checking playback position.
-     */
-    private fun playbackPositionCheck():Boolean = handler.postDelayed({
-        val currPos = playbackState.currentPlayBackPosition
-        if (audioPosition.value !=  currPos) {
-            audioPosition.postValue(currPos)
-            if (audioDuration > 0)
-                playbackProcess.postValue(((currPos * 100 / audioDuration)).toInt())
-        }
-
-        if (positionUpdate)
-            playbackPositionCheck()
-    }, 100L)
 
     override fun onCleared() {
         super.onCleared()

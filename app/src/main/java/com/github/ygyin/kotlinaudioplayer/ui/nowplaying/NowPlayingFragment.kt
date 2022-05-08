@@ -3,10 +3,12 @@ package com.github.ygyin.kotlinaudioplayer.ui.nowplaying
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.get
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -37,12 +42,12 @@ class NowPlayingFragment : Fragment() {
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    private val nowPlayingViewModel: NowPlayingViewModel by viewModels {
-        Injector.provideNowPlayingViewModel(requireContext())
-    }
-
     private val playlistViewModel: PlaylistViewModel by viewModels {
         Injector.providePlaylistViewModel(requireContext())
+    }
+
+    private val nowPlayingViewModel: NowPlayingViewModel by viewModels {
+        Injector.provideNowPlayingViewModel(requireContext())
     }
 
     companion object {
@@ -59,6 +64,7 @@ class NowPlayingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setBottomSheetBehavior()
         // Disable seek in small seekbar
         bottomSeekBar.setOnTouchListener { _, _ -> true }
@@ -75,6 +81,38 @@ class NowPlayingFragment : Fragment() {
                 playPauseImage.setImageState(it, true)
                 mainPlayPauseButton.setImageState(it, true)
             })
+
+        nowPlayingViewModel.shuffleMode.observe(viewLifecycleOwner,
+            Observer {
+                when(it){
+                    PlaybackStateCompat.SHUFFLE_MODE_NONE -> {
+                       shuffleButton.setColorFilter(Color.BLACK)
+                   }
+                   PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
+                       shuffleButton.setColorFilter(R.color.purple_500)
+                   }
+                }
+            }
+        )
+
+        nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner,
+            Observer {
+                when(it){
+                    PlaybackStateCompat.REPEAT_MODE_NONE-> {
+                        repeatButton.setImageResource(R.drawable.ic_repeat)
+                        repeatButton.setColorFilter(Color.BLACK)
+                    }
+                    PlaybackStateCompat.REPEAT_MODE_ONE -> {
+                        repeatButton.setImageResource(R.drawable.ic_repeat_one)
+                        repeatButton.setColorFilter(R.color.purple_500)
+                    }
+                    PlaybackStateCompat.REPEAT_MODE_ALL -> {
+                        repeatButton.setImageResource(R.drawable.ic_repeat)
+                        repeatButton.setColorFilter(R.color.purple_500)
+                    }
+                }
+            }
+        )
 
         nowPlayingViewModel.audioPosition.observe(viewLifecycleOwner,
             Observer { position -> nowDuration.text = timing(requireContext(), position) })
@@ -97,6 +135,14 @@ class NowPlayingFragment : Fragment() {
 
         mainNextButton.setOnClickListener {
             nowPlayingViewModel.skipNext()
+        }
+
+        repeatButton.setOnClickListener {
+            nowPlayingViewModel.selectRepeatMode()
+        }
+
+        shuffleButton.setOnClickListener {
+            nowPlayingViewModel.selectShuffleMode()
         }
     }
 
