@@ -49,10 +49,10 @@ class NowPlayingViewModel (private val context: Context,
         postValue(0)
     }
 
-
     val playPauseButton = MutableLiveData<IntArray>()
     val shuffleMode = MutableLiveData<Int>()
     val repeatMode = MutableLiveData<Int>()
+
     private val shuffleModes = listOf(
         PlaybackStateCompat.SHUFFLE_MODE_NONE,
         PlaybackStateCompat.SHUFFLE_MODE_ALL

@@ -27,6 +27,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.ygyin.kotlinaudioplayer.R
+import com.github.ygyin.kotlinaudioplayer.R.color
 import com.github.ygyin.kotlinaudioplayer.ui.nowplaying.NowPlayingViewModel.NowPlayingMetadata.Companion.timing
 import com.github.ygyin.kotlinaudioplayer.ui.playlist.PlaylistViewModel
 import com.github.ygyin.kotlinaudioplayer.utils.Injector
@@ -49,6 +50,8 @@ class NowPlayingFragment : Fragment() {
     private val nowPlayingViewModel: NowPlayingViewModel by viewModels {
         Injector.provideNowPlayingViewModel(requireContext())
     }
+
+    private var shuffleFlag = 0
 
     companion object {
         fun newInstance() = NowPlayingFragment()
@@ -89,7 +92,7 @@ class NowPlayingFragment : Fragment() {
                        shuffleButton.setColorFilter(Color.BLACK)
                    }
                    PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
-                       shuffleButton.setColorFilter(R.color.purple_500)
+                       shuffleButton.setColorFilter(color.purple_500)
                    }
                 }
             }
@@ -97,18 +100,18 @@ class NowPlayingFragment : Fragment() {
 
         nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner,
             Observer {
-                when(it){
-                    PlaybackStateCompat.REPEAT_MODE_NONE-> {
+                when (it) {
+                    PlaybackStateCompat.REPEAT_MODE_NONE -> {
                         repeatButton.setImageResource(R.drawable.ic_repeat)
                         repeatButton.setColorFilter(Color.BLACK)
                     }
                     PlaybackStateCompat.REPEAT_MODE_ONE -> {
                         repeatButton.setImageResource(R.drawable.ic_repeat_one)
-                        repeatButton.setColorFilter(R.color.purple_500)
+                        repeatButton.setColorFilter(color.purple_500)
                     }
                     PlaybackStateCompat.REPEAT_MODE_ALL -> {
                         repeatButton.setImageResource(R.drawable.ic_repeat)
-                        repeatButton.setColorFilter(R.color.purple_500)
+                        repeatButton.setColorFilter(color.purple_500)
                     }
                 }
             }
@@ -143,7 +146,9 @@ class NowPlayingFragment : Fragment() {
 
         shuffleButton.setOnClickListener {
             nowPlayingViewModel.selectShuffleMode()
+
         }
+
     }
 
     private fun uiUpdate(view: View, metadata: NowPlayingViewModel.NowPlayingMetadata) {
@@ -179,7 +184,7 @@ class NowPlayingFragment : Fragment() {
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .load(metadata.coverUri)
-                .into(object : CustomTarget<Bitmap>(){
+                .into(object : CustomTarget<Bitmap>() {
                     override fun onResourceReady(
                         resource: Bitmap,
                         transition: Transition<in Bitmap>?
@@ -191,7 +196,10 @@ class NowPlayingFragment : Fragment() {
                                 ContextCompat.getColor(requireContext(), android.R.color.black)
                             )
                             mainSubTitle.setTextColor(
-                                ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    android.R.color.darker_gray
+                                )
                             )
 //                            setMainTitleColor(palette)
                         }
@@ -207,7 +215,7 @@ class NowPlayingFragment : Fragment() {
         mainTitle.text = metadata.title
         mainSubTitle.text = metadata.subtitle
 
-        totalDuration.text= metadata.playTime
+        totalDuration.text = metadata.playTime
     }
 
     private fun setMainTitleColor(palette: Palette) {
@@ -238,7 +246,7 @@ class NowPlayingFragment : Fragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 Log.d(NowPlaying_TAG, "Slide Offset: $slideOffset")
-                NowPlayingContent.alpha= 1- slideOffset
+                NowPlayingContent.alpha = 1 - slideOffset
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
