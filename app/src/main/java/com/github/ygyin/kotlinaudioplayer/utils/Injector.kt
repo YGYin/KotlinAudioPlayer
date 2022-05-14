@@ -8,7 +8,7 @@ import com.github.ygyin.kotlinaudioplayer.ui.playlist.PlaylistViewModel
 
 object Injector {
 
-    private fun providePlaybackServiceConnection(context: Context): PlaybackServiceConnection {
+    fun providePlaybackServiceConnection(context: Context): PlaybackServiceConnection {
         return PlaybackServiceConnection.getInstance(
             context,
             ComponentName(context, PlaybackService::class.java)

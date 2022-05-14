@@ -3,24 +3,21 @@ package com.github.ygyin.kotlinaudioplayer.ui.nowplaying
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.media.session.PlaybackState
 import android.net.Uri
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -31,17 +28,16 @@ import com.github.ygyin.kotlinaudioplayer.R.color
 import com.github.ygyin.kotlinaudioplayer.ui.nowplaying.NowPlayingViewModel.NowPlayingMetadata.Companion.timing
 import com.github.ygyin.kotlinaudioplayer.ui.playlist.PlaylistViewModel
 import com.github.ygyin.kotlinaudioplayer.utils.Injector
+import com.github.ygyin.kotlinaudioplayer.utils.PlaybackServiceConnection
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.now_playing_content.*
 import kotlinx.android.synthetic.main.now_playing_fragment.*
 import kotlinx.android.synthetic.main.now_playing_main_content.*
+import kotlinx.coroutines.*
 
 private const val NowPlaying_TAG = "NowPlayingFragment"
 
 class NowPlayingFragment : Fragment() {
-
-
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     private val playlistViewModel: PlaylistViewModel by viewModels {
         Injector.providePlaylistViewModel(requireContext())
@@ -51,11 +47,10 @@ class NowPlayingFragment : Fragment() {
         Injector.provideNowPlayingViewModel(requireContext())
     }
 
-    private var shuffleFlag = 0
-
     companion object {
         fun newInstance() = NowPlayingFragment()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +59,11 @@ class NowPlayingFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.now_playing_fragment, container, false)
     }
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var seekbarJob: Job
+
+    private var shuffleFlag = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,19 +87,20 @@ class NowPlayingFragment : Fragment() {
 
         nowPlayingViewModel.shuffleMode.observe(viewLifecycleOwner,
             Observer {
-                when(it){
+                when (it) {
                     PlaybackStateCompat.SHUFFLE_MODE_NONE -> {
-                       shuffleButton.setColorFilter(Color.BLACK)
-                   }
-                   PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
-                       shuffleButton.setColorFilter(color.purple_500)
-                   }
+                        shuffleButton.setColorFilter(Color.BLACK)
+                    }
+                    PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
+                        shuffleButton.setColorFilter(color.purple_500)
+                    }
                 }
             }
         )
 
         nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner,
-            Observer { when (it) {
+            Observer {
+                when (it) {
                     PlaybackStateCompat.REPEAT_MODE_NONE -> {
                         repeatButton.setImageResource(R.drawable.ic_repeat)
                         repeatButton.setColorFilter(Color.BLACK)
@@ -148,6 +149,38 @@ class NowPlayingFragment : Fragment() {
 
         }
 
+        mainSeekBar.apply {
+            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    if (fromUser)
+                        nowPlayingViewModel.seekTo(progress)
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    try {
+                        seekbarJob.cancel()
+                    } catch (e: Exception) {
+                        Log.w(NowPlaying_TAG, "Tracking touch Exception")
+                    }
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    updateDragEvent()
+                    if (nowPlayingViewModel.isPlaying()) {
+                        seekbarJob = GlobalScope.launch {
+                            while (isActive) {
+                                updateDragEvent()
+                                delay(1000L)
+                            }
+                        }
+                    }
+                }
+            })
+        }
     }
 
     private fun uiUpdate(view: View, metadata: NowPlayingViewModel.NowPlayingMetadata) {
@@ -278,4 +311,25 @@ class NowPlayingFragment : Fragment() {
         bottomSeekBar.setProgress(progress, true)
         mainSeekBar.setProgress(progress, true)
     }
+
+    private fun updateDragEvent() {
+        GlobalScope.launch(Dispatchers.Main) {
+            val position = nowPlayingViewModel.controller.playbackState.position
+            val duration =
+                nowPlayingViewModel.controller.metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+            if (duration != 0L) {
+                val percent = 100 * position / duration
+                mainSeekBar.progress = percent.toInt()
+                nowDuration.text = msecToStr(position)
+                totalDuration.text = msecToStr(duration)
+            }
+        }
+    }
+
+    private fun msecToStr(msec: Long): String {
+        val sec = msec / 1000
+        val min = sec / 60
+        return "%d:%02d".format(min, sec % 60)
+    }
+
 }

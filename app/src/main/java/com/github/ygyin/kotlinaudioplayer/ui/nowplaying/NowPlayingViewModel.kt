@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.*
 import com.github.ygyin.kotlinaudioplayer.R
@@ -13,6 +14,8 @@ import com.github.ygyin.kotlinaudioplayer.extension.*
 import com.github.ygyin.kotlinaudioplayer.utils.EMPTY_PLAYBACK_STATE
 import com.github.ygyin.kotlinaudioplayer.utils.NOTHING_PLAYING
 import com.github.ygyin.kotlinaudioplayer.utils.PlaybackServiceConnection
+import kotlinx.android.synthetic.main.now_playing_main_content.*
+import kotlinx.coroutines.*
 import kotlin.math.floor
 
 
@@ -66,6 +69,7 @@ class NowPlayingViewModel (private val context: Context,
     private var audioDuration = 0L
     private var positionUpdate = true
     private val handler = Handler(Looper.getMainLooper())
+    var controller = MediaControllerCompat(context,playbackServiceConnection.sessionToken)
 
 
     /*
@@ -171,6 +175,20 @@ class NowPlayingViewModel (private val context: Context,
                 else -> intArrayOf(R.attr.state_play, -R.attr.state_pause) //Set play
             }
         )
+    }
+
+
+    fun seekTo(percent: Int) {
+        val state = playbackServiceConnection.playbackState.value?.state ?: PlaybackStateCompat.STATE_NONE
+        if (state == PlaybackStateCompat.STATE_PLAYING || state == PlaybackStateCompat.STATE_PAUSED) {
+            val duration = playbackServiceConnection.nowPlaying.value?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) ?: 0
+            val position = duration / 100 * percent
+            playbackServiceConnection.transportControls.seekTo(position)
+        }
+    }
+
+    fun isPlaying(): Boolean{
+        return (playbackServiceConnection.playbackState.value?.state == PlaybackStateCompat.STATE_PLAYING)
     }
 
     override fun onCleared() {
