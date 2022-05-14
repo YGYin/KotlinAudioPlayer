@@ -99,8 +99,7 @@ class NowPlayingFragment : Fragment() {
         )
 
         nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner,
-            Observer {
-                when (it) {
+            Observer { when (it) {
                     PlaybackStateCompat.REPEAT_MODE_NONE -> {
                         repeatButton.setImageResource(R.drawable.ic_repeat)
                         repeatButton.setColorFilter(Color.BLACK)
@@ -271,7 +270,12 @@ class NowPlayingFragment : Fragment() {
         })
     }
 
+    private var lastProgress = 0
     private fun updateProgressBar(progress: Int) {
+        if (progress == lastProgress)
+            return
+        lastProgress = progress
         bottomSeekBar.setProgress(progress, true)
+        mainSeekBar.setProgress(progress, true)
     }
 }
