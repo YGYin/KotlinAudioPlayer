@@ -8,7 +8,7 @@ At the beginning, I just want to write a simple Android music player with basic 
 
 Here I choose to use MVVM instead of MVC, for easier to reuse the components, and better to decoupled the Business Logic from User Interface.
 
-![MVVM](/Users/yg/Desktop/Java/ScreenShot/MVVM.png)
+![MVVM](img/MVVM.png)
 
 ## Features
 
