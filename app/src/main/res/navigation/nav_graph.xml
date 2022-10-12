@@ -7,6 +7,5 @@
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.github.ygyin.kotlinaudioplayer.ui.playlist.PlaylistFragment"
-        android:label="Playlist Fragment" >
-    </fragment>
+        android:label="Playlist Fragment"></fragment>
 </navigation>

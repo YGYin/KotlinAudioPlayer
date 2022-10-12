@@ -3,6 +3,9 @@ package com.github.ygyin.kotlinaudioplayer.extension
 import android.os.SystemClock
 import android.support.v4.media.session.PlaybackStateCompat
 
+/**
+ * Helper method for getting [PlaybackStateCompat] info
+ */
 inline val PlaybackStateCompat.isPrepared
     get() = (state == PlaybackStateCompat.STATE_BUFFERING) ||
             (state == PlaybackStateCompat.STATE_PLAYING) ||

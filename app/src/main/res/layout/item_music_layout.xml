@@ -30,8 +30,7 @@
         app:layout_constraintBottom_toTopOf="@id/artistName"
         app:layout_constraintTop_toTopOf="@id/musicCoverImage"
         tools:text="@tools:sample/lorem"
-        style="@style/Playlist.MainText"
-        />
+        style="@style/Playlist.MainText" />
 
     <TextView
         android:id="@+id/artistName"
@@ -44,7 +43,6 @@
         app:layout_constraintTop_toBottomOf="@id/musicName"
         app:layout_constraintBottom_toBottomOf="@id/musicCoverImage"
         tools:text="@tools:sample/lorem"
-        style="@style/Playlist.SecondaryText"
-        />
+        style="@style/Playlist.SecondaryText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

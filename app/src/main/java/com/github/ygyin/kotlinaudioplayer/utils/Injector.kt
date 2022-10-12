@@ -7,7 +7,7 @@ import com.github.ygyin.kotlinaudioplayer.ui.playlist.PlaylistViewModel
 
 
 object Injector {
-
+    // Provide Play back service
     fun providePlaybackServiceConnection(context: Context): PlaybackServiceConnection {
         return PlaybackServiceConnection.getInstance(
             context,
@@ -15,10 +15,11 @@ object Injector {
         )
 
     }
-
+    // Provide Media Source
     fun providePlaylistRepository(context: Context) =
         PlaylistImplement(context.contentResolver)
 
+    // Provide Playlist View Model
     fun providePlaylistViewModel(context: Context): PlaylistViewModel.Factory {
         val contentResolver = context.contentResolver
         val playbackServiceConnection = providePlaybackServiceConnection(context)

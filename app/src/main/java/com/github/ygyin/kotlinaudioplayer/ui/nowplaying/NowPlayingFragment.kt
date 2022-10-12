@@ -92,7 +92,7 @@ class NowPlayingFragment : Fragment() {
                         shuffleButton.setColorFilter(Color.BLACK)
                     }
                     PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
-                        shuffleButton.setColorFilter(color.purple_500)
+                        shuffleButton.setColorFilter(color.purple_700)
                     }
                 }
             }
@@ -107,11 +107,11 @@ class NowPlayingFragment : Fragment() {
                     }
                     PlaybackStateCompat.REPEAT_MODE_ONE -> {
                         repeatButton.setImageResource(R.drawable.ic_repeat_one)
-                        repeatButton.setColorFilter(color.purple_500)
+                        repeatButton.setColorFilter(color.purple_700)
                     }
                     PlaybackStateCompat.REPEAT_MODE_ALL -> {
                         repeatButton.setImageResource(R.drawable.ic_repeat)
-                        repeatButton.setColorFilter(color.purple_500)
+                        repeatButton.setColorFilter(color.purple_700)
                     }
                 }
             }
@@ -149,6 +149,7 @@ class NowPlayingFragment : Fragment() {
 
         }
 
+        // Drag Event
         mainSeekBar.apply {
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
@@ -303,12 +304,14 @@ class NowPlayingFragment : Fragment() {
         })
     }
 
+    // Update the main seek Bar and the bottom seek bar
     private var lastProgress = 0
     private fun updateProgressBar(progress: Int) {
         if (progress == lastProgress)
             return
         lastProgress = progress
         bottomSeekBar.setProgress(progress, true)
+        // MAIN SEEK BAR
         mainSeekBar.setProgress(progress, true)
     }
 

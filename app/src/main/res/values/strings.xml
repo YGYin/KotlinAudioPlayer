@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KotlinAudioPlayer</string>
+    <string name="app_name">Player</string>
 
     <string name="cover">cover</string>
     <!--    Time SeekBar Format-->

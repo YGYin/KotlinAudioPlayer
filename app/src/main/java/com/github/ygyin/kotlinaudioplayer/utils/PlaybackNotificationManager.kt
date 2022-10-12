@@ -19,8 +19,8 @@ import com.google.android.exoplayer2.util.NotificationUtil.IMPORTANCE_DEFAULT
 import com.google.android.exoplayer2.util.NotificationUtil.createNotificationChannel
 import kotlinx.coroutines.*
 
-const val CHANNEL_ID ="com.github.ygyin.kotlinaudioplayer.NOW_PLAYING"
-const val NOTIFICATION_ID =0x123
+const val CHANNEL_ID = "com.github.ygyin.kotlinaudioplayer.NOW_PLAYING"
+const val NOTIFICATION_ID = 0x123
 
 class PlaybackNotificationManager(
     private val context: Context,

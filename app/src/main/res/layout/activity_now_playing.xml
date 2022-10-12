@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0" >
+        app:layout_constraintHorizontal_bias="1.0">
 
         <ImageButton
             android:id="@+id/buttonShuffleMode"
@@ -177,7 +177,7 @@
         android:layout_marginEnd="40dp"
         android:id="@+id/albumSwitcher"
         android:outlineProvider="bounds"
-        android:elevation="8dp" >
+        android:elevation="8dp">
 
         <com.github.ygyin.kotlinaudioplayer.ui.nowplaying.SquareAlbumView
             android:id="@+id/albumArt"
@@ -205,7 +205,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/control"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
     </ViewSwitcher>
 

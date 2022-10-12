@@ -19,8 +19,10 @@ import kotlinx.coroutines.*
 import kotlin.math.floor
 
 
-class NowPlayingViewModel (private val context: Context,
-    playbackServiceConnection: PlaybackServiceConnection) : ViewModel(){
+class NowPlayingViewModel(
+    private val context: Context,
+    playbackServiceConnection: PlaybackServiceConnection
+) : ViewModel() {
 
     data class NowPlayingMetadata(
         val id: String,
@@ -69,7 +71,7 @@ class NowPlayingViewModel (private val context: Context,
     private var audioDuration = 0L
     private var positionUpdate = true
     private val handler = Handler(Looper.getMainLooper())
-    var controller = MediaControllerCompat(context,playbackServiceConnection.sessionToken)
+    var controller = MediaControllerCompat(context, playbackServiceConnection.sessionToken)
 
 
     /*
@@ -97,7 +99,7 @@ class NowPlayingViewModel (private val context: Context,
         repeatMode.postValue(it)
     }
 
-    private val playbackServiceConnection = playbackServiceConnection.also{
+    private val playbackServiceConnection = playbackServiceConnection.also {
         it.playbackState.observeForever(playbackStateObserver)
         it.nowPlaying.observeForever(audioMetadataObserver)
         it.shuffleMode.observeForever(shuffleObserver)
@@ -105,18 +107,18 @@ class NowPlayingViewModel (private val context: Context,
         playbackPositionCheck()
     }
 
-    fun skipPrevious(){
+    fun skipPrevious() {
         playbackServiceConnection.transportControls.skipToPrevious()
     }
 
-    fun skipNext(){
+    fun skipNext() {
         playbackServiceConnection.transportControls.skipToNext()
     }
 
-    fun selectShuffleMode(){
+    fun selectShuffleMode() {
         val currentMode = shuffleModes
             .indexOf(playbackServiceConnection.mediaController.shuffleMode)
-        val aimMode = when(currentMode){
+        val aimMode = when (currentMode) {
             PlaybackStateCompat.SHUFFLE_MODE_NONE -> PlaybackStateCompat.SHUFFLE_MODE_ALL
             PlaybackStateCompat.SHUFFLE_MODE_ALL -> PlaybackStateCompat.SHUFFLE_MODE_NONE
             else -> PlaybackStateCompat.SHUFFLE_MODE_ALL
@@ -124,10 +126,10 @@ class NowPlayingViewModel (private val context: Context,
         playbackServiceConnection.transportControls.setShuffleMode(aimMode)
     }
 
-    fun selectRepeatMode(){
+    fun selectRepeatMode() {
         val currentMode = repeatModes
             .indexOf(playbackServiceConnection.mediaController.repeatMode)
-        val aimMode = when(currentMode){
+        val aimMode = when (currentMode) {
             PlaybackStateCompat.REPEAT_MODE_NONE -> PlaybackStateCompat.REPEAT_MODE_ONE
             PlaybackStateCompat.REPEAT_MODE_ONE -> PlaybackStateCompat.REPEAT_MODE_ALL
             PlaybackStateCompat.REPEAT_MODE_ALL -> PlaybackStateCompat.REPEAT_MODE_NONE
@@ -142,9 +144,9 @@ class NowPlayingViewModel (private val context: Context,
         audio position: The actual time of playing audio
         !! The handler should be initialized before checking playback position.
      */
-    private fun playbackPositionCheck():Boolean = handler.postDelayed({
+    private fun playbackPositionCheck(): Boolean = handler.postDelayed({
         val currPos = playbackState.currentPlayBackPosition
-        if (audioPosition.value !=  currPos) {
+        if (audioPosition.value != currPos) {
             audioPosition.postValue(currPos)
             if (audioDuration > 0)
                 playbackProcess.postValue(((currPos * 100 / audioDuration)).toInt())
@@ -158,36 +160,38 @@ class NowPlayingViewModel (private val context: Context,
         playbackState: PlaybackStateCompat,
         metadata: MediaMetadataCompat
     ) {
-        if (metadata.id != null && metadata.duration != 0L){
-            val playingMetadata=NowPlayingMetadata(
+        if (metadata.id != null && metadata.duration != 0L) {
+            val playingMetadata = NowPlayingMetadata(
                 metadata.id!!,
                 metadata.displayIconUri,
                 metadata.title?.trim(),
                 metadata.displaySubtitle?.trim(),
-                NowPlayingMetadata.timing(context,metadata.duration )
+                NowPlayingMetadata.timing(context, metadata.duration)
             )
             this.audioMetadata.postValue(playingMetadata)
         }
 
         playPauseButton.postValue(
-            when(playbackState.isPlaying){
+            when (playbackState.isPlaying) {
                 true -> intArrayOf(-R.attr.state_play, R.attr.state_pause) //Set pause
                 else -> intArrayOf(R.attr.state_play, -R.attr.state_pause) //Set play
             }
         )
     }
 
-
     fun seekTo(percent: Int) {
-        val state = playbackServiceConnection.playbackState.value?.state ?: PlaybackStateCompat.STATE_NONE
+        val state =
+            playbackServiceConnection.playbackState.value?.state ?: PlaybackStateCompat.STATE_NONE
         if (state == PlaybackStateCompat.STATE_PLAYING || state == PlaybackStateCompat.STATE_PAUSED) {
-            val duration = playbackServiceConnection.nowPlaying.value?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) ?: 0
+            val duration =
+                playbackServiceConnection.nowPlaying.value?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+                    ?: 0
             val position = duration / 100 * percent
             playbackServiceConnection.transportControls.seekTo(position)
         }
     }
 
-    fun isPlaying(): Boolean{
+    fun isPlaying(): Boolean {
         return (playbackServiceConnection.playbackState.value?.state == PlaybackStateCompat.STATE_PLAYING)
     }
 

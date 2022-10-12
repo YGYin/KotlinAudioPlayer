@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.item_music_layout.view.*
 
 // Use RecyclerView, working with adapter and ViewHolder
 class PlaylistAdapter(private val onClick: (Music) -> Unit) :
-    ListAdapter<Music, PlaylistViewHolder>(Music.diffCallBack){
+    ListAdapter<Music, PlaylistViewHolder>(Music.diffCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val inflater = LayoutInflater.from(parent.context)

@@ -133,19 +133,21 @@ class PlaybackService : MediaBrowserServiceCompat(), CoroutineScope by MainScope
     private fun readyToPlay(
         metadataList: List<MediaMetadataCompat>,
         playItem: MediaMetadataCompat?, playWhenReady: Boolean,
-        startPosition: Long) {
-
+        startPosition: Long
+    ) {
         val index =
             if (playItem == null) 0
             else metadataList.indexOfFirst { mediaMetadataCompat ->
                 mediaMetadataCompat.id == playItem.id
             }
+
         initialPlaylistItems = metadataList
         initialPlayer.playWhenReady = playWhenReady
         // Reset the player, same as .stop(true)
         initialPlayer.stop()
         initialPlayer.clearMediaItems()
-        if (initialPlayer == exoPlayer){
+
+        if (initialPlayer == exoPlayer) {
             val audioSource = metadataList.toMediaSource(dataSourceFactory)
             // Same as prepare(audioSource)
             exoPlayer.setMediaSource(audioSource)
@@ -154,7 +156,7 @@ class PlaybackService : MediaBrowserServiceCompat(), CoroutineScope by MainScope
         }
     }
 
-    private fun playerSwitch(prevPlayer: Player?, currPlayer: Player){
+    private fun playerSwitch(prevPlayer: Player?, currPlayer: Player) {
         if (prevPlayer == currPlayer)
             return
 
@@ -164,7 +166,7 @@ class PlaybackService : MediaBrowserServiceCompat(), CoroutineScope by MainScope
             if (initialPlaylistItems.isEmpty()) {
                 currPlayer.stop()
                 currPlayer.clearMediaItems()
-            } else if (playbackState != Player.STATE_IDLE && playbackState != Player.STATE_ENDED){
+            } else if (playbackState != Player.STATE_IDLE && playbackState != Player.STATE_ENDED) {
                 readyToPlay(
                     metadataList = initialPlaylistItems,
                     playItem = initialPlaylistItems[prevPlayer.currentMediaItemIndex],

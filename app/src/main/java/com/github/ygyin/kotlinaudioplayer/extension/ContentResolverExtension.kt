@@ -9,7 +9,7 @@ fun ContentResolver.registerObserver(
     uri: Uri,
     observer: (selfChange: Boolean) -> Unit
 ): ContentObserver {
-    val cteObserver = object : ContentObserver(Handler()){
+    val cteObserver = object : ContentObserver(Handler()) {
         override fun onChange(selfChange: Boolean) {
             observer(selfChange)
         }

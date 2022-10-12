@@ -35,6 +35,7 @@ class PlaybackServiceConnection(context: Context, serviceComponent: ComponentNam
 
     lateinit var mediaController: MediaControllerCompat
     private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
+
     // UI uses mediaBrowser as controller to connect MediaBrowserService,
     val mediaBrowser = MediaBrowserCompat(
         context,
@@ -70,7 +71,7 @@ class PlaybackServiceConnection(context: Context, serviceComponent: ComponentNam
         }
     }
 
-    private inner class MediaControllerCallback: MediaControllerCompat.Callback(){
+    private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             playbackState.postValue(state ?: EMPTY_PLAYBACK_STATE)
         }
@@ -97,6 +98,7 @@ class PlaybackServiceConnection(context: Context, serviceComponent: ComponentNam
             mediaBrowserConnectionCallback.onConnectionSuspended()
         }
     }
+
     companion object {
         // For Singleton instantiation.
         @Volatile
