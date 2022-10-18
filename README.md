@@ -26,3 +26,5 @@ Here I choose to use MVVM instead of MVC, for easier to reuse the components, an
 -   Gradle: 7.1.1
 
 You just need to make sure that your audio files are placed in your local media library (Files -> Audio), then the player will load the media metadata automatically. Enjoy your music.
+
+## Test
