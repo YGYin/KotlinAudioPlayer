@@ -25,6 +25,15 @@ Here I choose to use MVVM instead of MVC, for easier to reuse the components, an
 -   SDK: 30 or higher (32 is recommended)
 -   Gradle: 7.1.1
 
+![library](img/library.png)
 You just need to make sure that your audio files are placed in your local media library (Files -> Audio), then the player will load the media metadata automatically. Enjoy your music.
 
-## Test
+## Screenshots
+
+-   **Playlist and Now Playing interface**
+
+    ![player](img/player.JPG)
+
+-   **Animation Sample (With Cursor)**
+
+    ![sample1](img/sample1.gif)
